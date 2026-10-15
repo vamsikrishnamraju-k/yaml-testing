@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: frontend
+
+
+spec:
+  replicas: 4
+
+  selector:
+    matchLabels:
+      app: node
+
+  template:
+    metadata:
+      labels:
+        app: node
+
+    spec:
+      containers:
+      - name: node-container
+        image: vamsikrishnamraju/frontend:v2
+        ports:
+        - containerPort: 3000
+        
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "100Mi"
+          limits:
+            cpu: "200m"
+            memory: "200Mi"  
+
+
+
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: frontend-service
+
+spec:
+  type: ClusterIP
+
+  selector:
+    app: node
+
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
